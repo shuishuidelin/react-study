@@ -7,7 +7,7 @@ import 'katex/dist/katex.min.css';
 import jsonData from './data.json';
 import ItemContent from "@/app/test-doc/ItemContent";
 export default function TestDoc() {
-    const [data, setData] = useState< any[]>([]);
+    const [data, setData] = useState<typeof jsonData.data.chatItems>([]);
     async function getData(){
         await fetch('./data.json')
         setData(jsonData.data.chatItems)
