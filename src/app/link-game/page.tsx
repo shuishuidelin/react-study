@@ -3,7 +3,7 @@
 import TextBrick from "@/app/link-game/TextBrick";
 import {useEffect, useState} from "react";
 import {BrickState, WordInfo} from "@/app/link-game/typing";
-import {useImmer} from 'use-immer';
+import { useImmer } from 'use-immer';
 
 export default function LinkGame() {
     const [wordData,updateWordData] = useImmer<WordInfo[]>([]);
@@ -20,6 +20,9 @@ export default function LinkGame() {
             temp[jsonData.length + idx] = {...item,id:item.id+'_answer'}
         })
         updateWordData(temp)
+    }
+    const submit = () => {
+        console.log("结束，成功了")
     }
     /* 选中的块id，用作两个块的比较 */
     const [choseWordId, setChoseWordId] = useState<string | undefined>(undefined);
@@ -46,14 +49,19 @@ export default function LinkGame() {
             if (target && chooseWord && choseWordId && getWordInfoType(id) !== getWordInfoType(choseWordId)){
                 const result = computeResult(id,choseWordId)
                 target.state = chooseWord.state = result ? BrickState.success : BrickState.error;
+                if(target.state === BrickState.success) target.over = chooseWord.over = true
                 setChoseWordId(undefined);
-            }else if(target){
+            } else if(target){
                 target.state = target.state === BrickState.choose ? BrickState.normal : BrickState.choose;
                 if(chooseWord) chooseWord.state = BrickState.normal
                 setChoseWordId(target.state === BrickState.choose ? target.id : undefined);
             }
+
         });
     };
+    useEffect(()=> {
+        if(wordData.length && !wordData.some(i => !i.over)) submit()
+    },[wordData])
     useEffect(()=>{
         console.log('onReady')
         getData()
