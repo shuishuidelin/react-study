@@ -1,6 +1,6 @@
 
 export enum BrickState {
-    normal = 'normal',choose =  'choose',success = 'success',error = 'error'
+    normal = 'normal',choose =  'choose',success = 'success',error = 'error',/*禁用*/ disabled = 'disabled',
 }
 
 export interface WordInfo {

@@ -40,8 +40,8 @@ export default function LinkGame() {
             draft.forEach(item => {
                 if(id === item.id) target = item
                 else if(choseWordId === item.id) chooseWord = item
+                else if(item.state && [BrickState.success,BrickState.disabled].includes(item.state)) item.state = BrickState.disabled
                 else item.state = BrickState.normal
-
             });
             if (target && chooseWord && choseWordId && getWordInfoType(id) !== getWordInfoType(choseWordId)){
                 const result = computeResult(id,choseWordId)
