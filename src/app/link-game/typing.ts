@@ -7,17 +7,20 @@ export enum BrickState {
 }
 
 export interface WordInfo {
-  id: string;
-  question: string;
-  answer: string;
-  state?: BrickState;
+  id: string
+  question: string
+  answer: string
+  state?: BrickState
   /* 判定是否结束，考虑到多个功能之间块处理逻辑可能不一样，故增加"over"字段用来判断结束逻辑 */
-  over?: boolean;
+  over?: boolean
 }
 export interface TextBrickProps {
-  text: string;
-  onChoose: () => void;
+  text: string
+  onChoose: () => void
   action?: {
-    state?: BrickState;
-  };
+    state?: BrickState
+  }
+}
+export interface LinkGameConfig {
+  pageSize: number
 }

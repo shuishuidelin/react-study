@@ -1,20 +1,20 @@
-"use client";
+"use client"
 // `app/dashboard/page.tsx` is the UI for the `/dashboard` URL
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 
-import "katex/dist/katex.min.css";
-import jsonData from "./data.json";
-import ItemContent from "@/app/test-doc/ItemContent";
+import "katex/dist/katex.min.css"
+import jsonData from "./data.json"
+import ItemContent from "@/app/test-doc/ItemContent"
 export default function TestDoc() {
-  const [data, setData] = useState<typeof jsonData.data.chatItems>([]);
+  const [data, setData] = useState<typeof jsonData.data.chatItems>([])
   async function getData() {
-    await fetch("./data.json");
-    setData(jsonData.data.chatItems);
+    await fetch("./data.json")
+    setData(jsonData.data.chatItems)
   }
   useEffect(() => {
-    getData();
-  }, []);
+    getData()
+  }, [])
   return (
     <div>
       {data.map((item, idx) => (
@@ -28,5 +28,5 @@ export default function TestDoc() {
         </div>
       ))}
     </div>
-  );
+  )
 }

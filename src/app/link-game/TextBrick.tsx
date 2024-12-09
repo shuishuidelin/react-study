@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
-import { BrickState, TextBrickProps } from "@/app/link-game/typing";
-import { emptyFun } from "@/utils/fun";
+import { BrickState, TextBrickProps } from "@/app/link-game/typing"
+import { emptyFun } from "@/utils/fun"
 
 export default function TextBrick({ text, onChoose, action }: TextBrickProps) {
-  const state = action?.state || BrickState.normal;
+  const state = action?.state || BrickState.normal
   const styles = {
     normal: {},
     choose: {
@@ -27,9 +27,9 @@ export default function TextBrick({ text, onChoose, action }: TextBrickProps) {
       color: "#d1d1d1",
       borderColor: "#d1d1d1",
     },
-  };
+  }
 
-  const style = styles?.[state] || {};
+  const style = styles?.[state] || {}
   return (
     <div
       className="bg-white rounded border border-gray-300 p-4 inline-flex justify-center mb-5 text-slate-700"
@@ -42,5 +42,5 @@ export default function TextBrick({ text, onChoose, action }: TextBrickProps) {
     >
       {text}
     </div>
-  );
+  )
 }
