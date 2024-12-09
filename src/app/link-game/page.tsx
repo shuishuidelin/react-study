@@ -1,23 +1,42 @@
 "use client"
 // `app/dashboard/page.tsx` is the UI for the `/dashboard` URL
 import TextBrick from "@/app/link-game/TextBrick"
-import { useEffect, useState } from "react"
-import { BrickState, WordInfo } from "@/app/link-game/typing"
+import { useEffect, useRef, useState } from "react"
+import {
+  BrickState,
+  LinkGameDataStructure,
+  WordInfo,
+} from "@/app/link-game/typing"
 import { useImmer } from "use-immer"
+import { linkGameConfig } from "@/app/link-game/linkGameConfig"
 
 export default function LinkGame() {
   const [wordData, updateWordData] = useImmer<WordInfo[]>([])
-  const getData = () => {
-    const jsonData = [
-      { id: "0", question: "你好", answer: "hello" },
-      { id: "1", question: "世界", answer: "world" },
-      { id: "2", question: "我", answer: "me" },
-      { id: "3", question: "你", answer: "you" },
-    ]
-    const temp: typeof jsonData = []
-    jsonData.forEach((item, idx) => {
+  const linkGameData = useRef<LinkGameDataStructure[]>([])
+  const dataState = useRef<"init" | "loading" | "complete">("init")
+  const requestServerData = async () => {
+    return new Promise<void>((resolve) => {
+      dataState.current = "loading"
+      setTimeout(() => {
+        const jsonStr =
+          '[{"id":"0","question":"你好","answer":"hello"},{"id":"1","question":"世界","answer":"world"},{"id":"2","question":"我","answer":"me"},{"id":"3","question":"你","answer":"you"},{"id":"4","question":"他","answer":"he"},{"id":"5","question":"她","answer":"she"},{"id":"6","question":"它","answer":"it"},{"id":"7","question":"是","answer":"is"},{"id":"8","question":"的","answer":"of"},{"id":"9","question":"和","answer":"and"},{"id":"10","question":"一个","answer":"a"},{"id":"11","question":"在","answer":"in"},{"id":"12","question":"有","answer":"have"},{"id":"13","question":"这个","answer":"this"},{"id":"14","question":"那个","answer":"that"},{"id":"15","question":"我们","answer":"we"},{"id":"16","question":"你们","answer":"you all"},{"id":"17","question":"他们","answer":"they"},{"id":"18","question":"她","answer":"her"},{"id":"19","question":"们","answer":"s"},{"id":"20","question":"我的","answer":"my"},{"id":"21","question":"你的","answer":"your"},{"id":"22","question":"我们的","answer":"our"},{"id":"23","question":"他们的","answer":"their"},{"id":"24","question":"这里","answer":"here"}]'
+        linkGameData.current = JSON.parse(jsonStr)
+        dataState.current = "complete"
+        resolve()
+      }, 1000)
+    })
+  }
+  const getData = async () => {
+    if (linkGameData.current.length === 0) {
+      if (dataState.current === "complete") return submit()
+      await requestServerData()
+    }
+    const config = await linkGameConfig()
+    const pageSize = config.pageSize || 5
+    const temp: LinkGameDataStructure[] = []
+    linkGameData.current.splice(0, pageSize).forEach((item, idx) => {
       temp[idx] = { ...item }
-      temp[jsonData.length + idx] = { ...item, id: item.id + "_answer" }
+      temp[pageSize + idx] = { ...item, id: item.id + "_answer" }
     })
     updateWordData(temp)
   }
@@ -76,7 +95,10 @@ export default function LinkGame() {
     })
   }
   useEffect(() => {
-    if (wordData.length && !wordData.some((i) => !i.over)) submit()
+    // 整页都已完成
+    if (wordData.length && !wordData.some((i) => !i.over)) {
+      getData()
+    }
   }, [wordData])
   useEffect(() => {
     console.log("onReady")

@@ -24,3 +24,9 @@ export interface TextBrickProps {
 export interface LinkGameConfig {
   pageSize: number
 }
+
+export interface LinkGameDataStructure {
+  id: string
+  question: string
+  answer: string
+}
