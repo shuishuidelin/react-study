@@ -9,11 +9,14 @@ import {
 } from "@/app/link-game/typing"
 import { useImmer } from "use-immer"
 import { linkGameConfig } from "@/app/link-game/linkGameConfig"
+import { Drawer } from "@mui/material"
+import ResultDrawer from "@/app/link-game/ResultDrawer"
 
 export default function LinkGame() {
   const [wordData, updateWordData] = useImmer<WordInfo[]>([])
   const linkGameData = useRef<LinkGameDataStructure[]>([])
   const dataState = useRef<"init" | "loading" | "complete">("init")
+  const [resultBoxVis, setResultBoxVis] = useState<boolean>(false)
   const requestServerData = async () => {
     return new Promise<void>((resolve) => {
       dataState.current = "loading"
@@ -42,6 +45,7 @@ export default function LinkGame() {
   }
   const submit = () => {
     console.log("结束，成功了")
+    setResultBoxVis(true)
   }
   /* 选中的块id，用作两个块的比较 */
   const [choseWordId, setChoseWordId] = useState<string | undefined>(undefined)
@@ -133,6 +137,13 @@ export default function LinkGame() {
           })}
         </div>
       </div>
+      <Drawer
+        anchor={"bottom"}
+        open={resultBoxVis}
+        onClose={() => setResultBoxVis(false)}
+      >
+        <ResultDrawer></ResultDrawer>
+      </Drawer>
     </div>
   )
 }
