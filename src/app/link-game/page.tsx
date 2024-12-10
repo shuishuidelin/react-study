@@ -16,7 +16,7 @@ export default function LinkGame() {
   const [wordData, updateWordData] = useImmer<WordInfo[]>([])
   const linkGameData = useRef<LinkGameDataStructure[]>([])
   const dataState = useRef<"init" | "loading" | "complete">("init")
-  const [resultBoxVis, setResultBoxVis] = useState<boolean>(false)
+  const [resultBoxVis, setResultBoxVis] = useState<boolean>(true)
   const requestServerData = async () => {
     return new Promise<void>((resolve) => {
       dataState.current = "loading"
@@ -31,7 +31,7 @@ export default function LinkGame() {
   }
   const getData = async () => {
     if (linkGameData.current.length === 0) {
-      if (dataState.current === "complete") return submit()
+      if (dataState.current === "complete") return setResultBoxVis(true)
       await requestServerData()
     }
     const config = await linkGameConfig()
@@ -44,8 +44,8 @@ export default function LinkGame() {
     updateWordData(temp)
   }
   const submit = () => {
-    console.log("结束，成功了")
-    setResultBoxVis(true)
+    console.log("结束，成功了,上传结果")
+    setResultBoxVis(false)
   }
   /* 选中的块id，用作两个块的比较 */
   const [choseWordId, setChoseWordId] = useState<string | undefined>(undefined)
@@ -141,8 +141,11 @@ export default function LinkGame() {
         anchor={"bottom"}
         open={resultBoxVis}
         onClose={() => setResultBoxVis(false)}
+        ModalProps={{
+          onClose: () => setResultBoxVis(true),
+        }}
       >
-        <ResultDrawer></ResultDrawer>
+        <ResultDrawer onSubmit={submit}></ResultDrawer>
       </Drawer>
     </div>
   )
