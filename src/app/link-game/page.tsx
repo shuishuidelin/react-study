@@ -16,7 +16,7 @@ export default function LinkGame() {
   const [wordData, updateWordData] = useImmer<WordInfo[]>([])
   const linkGameData = useRef<LinkGameDataStructure[]>([])
   const dataState = useRef<"init" | "loading" | "complete">("init")
-  const [resultBoxVis, setResultBoxVis] = useState<boolean>(true)
+  const [resultBoxVis, setResultBoxVis] = useState<boolean>(false) // 结算弹窗
   const requestServerData = async () => {
     return new Promise<void>((resolve) => {
       dataState.current = "loading"

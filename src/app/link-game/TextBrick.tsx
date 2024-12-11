@@ -34,7 +34,7 @@ export default function TextBrick({ text, onChoose, action }: TextBrickProps) {
     <div
       className="bg-white rounded border border-gray-300 p-4 inline-flex justify-center mb-5 text-slate-700"
       style={style}
-      onClick={
+      onTouchEnd={
         [BrickState.disabled, BrickState.success].includes(state)
           ? emptyFun
           : onChoose
