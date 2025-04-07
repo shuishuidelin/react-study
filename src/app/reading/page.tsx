@@ -1,27 +1,23 @@
 "use client"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-interface TaskStep {
-  id: string
-  original: string
-  translation: string
-}
-
-interface Task {
-  id: string
-  steps: TaskStep[]
-}
+import { Task } from "@/app/reading/interfaces"
+import { getTasks } from "@/app/reading/server"
+import { Button, Chip, Paper } from "@mui/material"
 
 const ReadingPage = () => {
   const [tasks, setTasks] = useState<Task[]>([])
   const router = useRouter()
   useEffect(() => {
-    const savedTasks = localStorage.getItem("tasks")
-    if (savedTasks) {
-      setTasks(JSON.parse(savedTasks))
-    } else {
-      // Router.push("/reading/addTask")
+    const fetchTask = async () => {
+      try {
+        const results = await getTasks()
+        setTasks(results.tasks)
+      } catch (err) {
+        console.error(err)
+      }
     }
+    fetchTask()
   }, [])
 
   return (
@@ -34,12 +30,29 @@ const ReadingPage = () => {
           <h2>Tasks</h2>
           <ul>
             {tasks.map((task) => (
-              <li key={task.id}>{task.steps[0].original}</li>
+              <Paper
+                elevation={3}
+                style={{ padding: 16, marginBottom: 32 }}
+                key={task.id}
+                onClick={() => router.push(`/reading/${task.id}`)}
+              >
+                <Chip label={task.id}></Chip>
+                {task.steps[0].original}
+              </Paper>
             ))}
           </ul>
         </div>
       )}
-      <button onClick={() => router.push("/reading/addTask")}>Add Task</button>
+      <div className="flex">
+        <Button
+          className={"flex-1 ml-2 mr-2"}
+          variant={"contained"}
+          color={"secondary"}
+          onClick={() => router.push("/reading/addTask")}
+        >
+          Add Task
+        </Button>
+      </div>
     </div>
   )
 }

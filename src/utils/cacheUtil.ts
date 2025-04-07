@@ -16,9 +16,10 @@ const _setCacheItem = (key: string, value: unknown) => {
     } catch {
       realValue = value.toString()
     }
+  } else {
+    realValue =
+      typeof realValue === "string" ? STRING_FLAG + realValue : realValue
   }
-  realValue =
-    typeof realValue === "string" ? STRING_FLAG + realValue : realValue
   localStorage.setItem(key, realValue as string)
 }
 /**
